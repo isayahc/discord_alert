@@ -2,7 +2,6 @@ from selenium import webdriver
 
 from time import sleep
 
-
 # finds all elements by the name
 # find_elements_by_class_name is based on regex and not equal,
 # there it's import to take out any elements that are not an exact match
@@ -12,7 +11,8 @@ def get_today_link()-> str:
     """Goes on seekingalpha.com 
 
     Returns:
-        str: The link of Today's Wallstreet breakfast article
+        str: The link of Today's Wallstreet breakfast article If it has been published
+        else it returns an empty string
     """
     
     driver = webdriver.Firefox()
@@ -41,6 +41,11 @@ def get_today_link()-> str:
             driver.close()
 
             return current_link
+    
+    #if this point is reach then the articles hasn't yet been published
+    driver.close()
+    # if today's article isn't yet publish return empty string
+    return ""
 
 def wait_for_update():
     #waits several times until today's article is up. 
