@@ -1,4 +1,5 @@
 from selenium import webdriver
+import os
 
 from time import sleep
 
@@ -15,7 +16,13 @@ def get_today_link()-> str:
         else it returns an empty string
     """
     
-    driver = webdriver.Firefox()
+    # driver = webdriver.Firefox()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
     link = 'https://seekingalpha.com/author/wall-street-breakfast#regular_articles'
     driver.get(link)
 
