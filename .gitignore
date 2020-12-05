@@ -8,3 +8,4 @@
 #files
 geckodriver.log
 .env
+**.env
