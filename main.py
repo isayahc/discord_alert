@@ -38,8 +38,9 @@ def main():
     sched.add_job(send_message(
     data), 
     'cron', 
-    minute =13,
+    minute =15,
     hour=14)
+    sched.start()
 
 
 #wsb usually publishes around 6am
@@ -53,13 +54,9 @@ def main():
 if __name__=='__main__':
     logging.debug("I'm a message for debugging purposes.")
     print(get_utc_time())
-    # main()
-    sched = BlockingScheduler()
-    sched.add_job(send_message(
-    get_today_link()), 
-    'cron', 
-    minute =13,
-    hour=14)
+    main()
+
+    
 
 
     
