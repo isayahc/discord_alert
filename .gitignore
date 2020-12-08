@@ -9,3 +9,4 @@
 geckodriver.log
 .env
 **.env
+.flaskenv
