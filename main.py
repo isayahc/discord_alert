@@ -23,8 +23,11 @@ def utc_to_nyc():
 def wait_for_publishing(wait_minutes:int):
     #inital time is 6.am nyc or 11 utc
     # the time does not matter here
+    # I find out which version of python heroku uses
+    logging.debug("wait_for_publishing")
     data=get_today_link()
     while not data:
+        logging.debug("wait_for_publishing while loop")
         sleep(60*wait_minutes)
         data=get_today_link()
 
@@ -38,7 +41,7 @@ def main():
     sched.add_job(send_message(
     data), 
     'cron', 
-    minute =15,
+    minute =23,
     hour=14)
     sched.start()
 
