@@ -23,17 +23,23 @@ def utc_to_nyc():
 def wait_for_publishing(wait_minutes:int):
     #inital time is 6.am nyc or 11 utc
     # the time does not matter here
-    #problematic code
-    while not (data:=get_today_link()):
+    data=get_today_link()
+    while not data:
         sleep(60*wait_minutes)
+        data=get_today_link()
 
     return data
 
 
 
-# def main():
-    
-#     wait_for_publishing(15)
+def main():
+    data = wait_for_publishing(15)
+    sched = BlockingScheduler()
+    sched.add_job(send_message(
+    data), 
+    'cron', 
+    minute =13,
+    hour=14)
 
 
 #wsb usually publishes around 6am
@@ -52,7 +58,7 @@ if __name__=='__main__':
     sched.add_job(send_message(
     get_today_link()), 
     'cron', 
-    minute =5,
+    minute =13,
     hour=14)
 
 
