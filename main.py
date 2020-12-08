@@ -24,7 +24,7 @@ def wait_for_publishing(wait_minutes:int):
     #inital time is 6.am nyc or 11 utc
     # the time does not matter here
     #problematic code
-    while (data:=get_today_link()) == '':
+    while not (data:=get_today_link()):
         sleep(60*wait_minutes)
 
     return data
@@ -52,7 +52,7 @@ if __name__=='__main__':
     sched.add_job(send_message(
     get_today_link()), 
     'cron', 
-    minute =1,
+    minute =5,
     hour=14)
 
 
