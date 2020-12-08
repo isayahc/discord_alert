@@ -28,9 +28,11 @@ def wait_for_publishing(wait_minutes:int):
     data=get_today_link()
     while not data:
         logging.debug("wait_for_publishing while loop")
+        logging.debug(f"data: {data}")
         sleep(60*wait_minutes)
         data=get_today_link()
 
+    logging.debug(f"loop finished data: {data}")
     return data
 
 
@@ -41,7 +43,7 @@ def main():
     sched.add_job(send_message(
     data), 
     'cron', 
-    minute =23,
+    minute =37,
     hour=14)
     sched.start()
 

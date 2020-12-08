@@ -25,8 +25,10 @@ def get_today_link()-> str:
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
     link = 'https://seekingalpha.com/author/wall-street-breakfast#regular_articles'
     driver.get(link)
+    # driver wait
 
-    sleep(20) # allows loading
+    driver.implicitly_wait(60*2) # allows loading
+
 
     class_name = 'author-single-article'
     # div tage for articles  
@@ -38,7 +40,6 @@ def get_today_link()-> str:
         # other than Today and Yesterday, all other dates 
         # are formatted differently
         if 'Today' in article_text:
-            # print(article_text)
             x = article.find_elements_by_tag_name('a')
 
             article_link_element = x[0]
