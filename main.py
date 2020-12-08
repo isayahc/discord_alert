@@ -18,14 +18,16 @@ def utc_to_nyc():
     nyc_time = get_utc_time() - timedelta(hours=5)
     return nyc_time
 
-# def wait_for_publishing(wait_minutes:int):
-#     #inital time is 6.am nyc or 11 utc
+def wait_for_publishing(wait_minutes:int):
+    #inital time is 6.am nyc or 11 utc
 
-#     #problematic code
-#     while not get_today_link():
-#         sleep(60*wait_minutes)
+    #problematic code
+    # data = get_today_link()
+    while data:=get_today_link() == '':
+        sleep(60*wait_minutes)
 
-#     current_time = get_utc_time()
+    return data
+
 
 
 # def main():
@@ -48,7 +50,7 @@ if __name__=='__main__':
     sched.add_job(send_message(
     get_today_link()), 
     'cron', 
-    minute =45,
+    minute =55,
     hour=13)
 
 
