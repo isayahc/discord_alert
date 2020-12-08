@@ -7,7 +7,9 @@ from time import sleep
 
 import logging
 from logging.config import fileConfig
+
 logger = logging.getLogger()
+fileConfig('logging_config.ini')
 
 def get_utc_time() ->datetime.time:
     now_utc_date = datetime.now(timezone.utc)
@@ -20,10 +22,9 @@ def utc_to_nyc():
 
 def wait_for_publishing(wait_minutes:int):
     #inital time is 6.am nyc or 11 utc
-
+    # the time does not matter here
     #problematic code
-    # data = get_today_link()
-    while data:=get_today_link() == '':
+    while (data:=get_today_link()) == '':
         sleep(60*wait_minutes)
 
     return data
@@ -45,13 +46,14 @@ def wait_for_publishing(wait_minutes:int):
 
 if __name__=='__main__':
     logging.debug("I'm a message for debugging purposes.")
+    print(get_utc_time())
     # main()
     sched = BlockingScheduler()
     sched.add_job(send_message(
     get_today_link()), 
     'cron', 
-    minute =55,
-    hour=13)
+    minute =1,
+    hour=14)
 
 
     
