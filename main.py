@@ -24,7 +24,7 @@ def wait_for_publishing(wait_minutes:int):
     sched.add_job(send_message(
         get_today_link()), 
         'cron', 
-        minutes =current_time.minutes+1,
+        minute =current_time.minute+1,
         hour=current_time.hour)
 
 def main():
