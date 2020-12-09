@@ -1,19 +1,18 @@
-from os import environ
 import requests 
 
 
-def send_message(message:str)->None:
-    """[summary]
+def send_message(message:str, hook_url)->None:
+    """sends message to link
 
     Args:
-        data (str): [description]
+        data (str): the message you want to send
     """
-    # hook_url = environ['']
-    hook_url = environ.get('discord_link')
+
     msg = {
-  "content": message
-}
-    x = requests.post(hook_url, data = msg)
+      "content": message
+    }
+
+    requests.post(hook_url, data = msg) # bot post
 
 
     

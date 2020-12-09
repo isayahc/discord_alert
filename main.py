@@ -7,28 +7,32 @@ from time import sleep
 
 import logging
 from logging.config import fileConfig
+from os import environ
 
-logger = logging.getLogger()
-fileConfig('logging_config.ini')
 
 def get_utc_time() ->datetime.time:
     now_utc_date = datetime.now(timezone.utc)
     now_utc_time = now_utc_date.time() # coverts datetime into time object
     return now_utc_time
 
+
 def utc_to_nyc():
     nyc_time = get_utc_time() - timedelta(hours=5)
     return nyc_time
+
 
 def wait_for_publishing(wait_minutes:int):
     #inital time is 6.am nyc or 11 utc
     # the time does not matter here
     # I find out which version of python heroku uses
+
     logging.debug("start of wait_for_publishing")
     data=get_today_link()
+
     while not data:
         logging.debug("wait_for_publishing while loop")
         logging.debug(f"data: {data}")
+
         sleep(60*wait_minutes)
         data=get_today_link()
 
@@ -36,32 +40,25 @@ def wait_for_publishing(wait_minutes:int):
     return data
 
 
-
 def main():
     data = wait_for_publishing(15)
-    sched = BlockingScheduler()
-    sched.add_job(send_message(
-    data), 
-    'cron', 
-    minute =37,
-    hour=14)
-    sched.start()
-
-
-#wsb usually publishes around 6am
-#start conquence then
-#while not get_today_link
-##wait x=15 mins
-#else send_message(get_today_link())
-
+    hook_url = environ.get('discord_link')
+    send_message(data, hook_url)
 
 
 if __name__=='__main__':
+    #logger data
+    logger = logging.getLogger()
+    fileConfig('logging_config.ini')
+
     logging.debug("I'm a message for debugging purposes.")
-    print(get_utc_time())
-    main()
+    logging.debug(get_utc_time())
 
-    
-
-
-    
+    sched = BlockingScheduler()
+    sched.add_job(
+        main, 
+        'cron', 
+        minute =40,
+        hour=19
+    )
+    sched.start()

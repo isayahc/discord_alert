@@ -18,12 +18,14 @@ def set_driver():
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
+    # I had to add an user agent
     chrome_options.add_argument('--user-agent=""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36""')
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
     return driver
 
 
 def get_today_link()-> str:
+    # this needs to get edited
     """Goes on seekingalpha.com 
 
     Returns:
@@ -31,24 +33,11 @@ def get_today_link()-> str:
         else it returns an empty string
     """
     
-    # driver = webdriver.Firefox()
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument('--user-agent=""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36""')
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
-    
+    driver = set_driver()
     link = 'https://seekingalpha.com/author/wall-street-breakfast#regular_articles'
     driver.get(link)
-    # driver wait
-
-    # wait = WebDriverWait(driver,
-    # wait.until(EC.visibility_of_any_elements_located)
-
+    
     driver.implicitly_wait(60*2) # allows loading
-
 
     class_name = 'author-single-article'
     # div tage for articles  
@@ -80,9 +69,3 @@ def wait_for_update():
     #start checking at time t UTC, and check every x minutes
     pass
 
-def test_thing(elememt:str, delay_in_seconds:int, driver=set_driver()):
-    try:
-        myElem = WebDriverWait(driver, delay_in_seconds).until(EC.presence_of_element_located((By.ID, elememt)))
-        print("Page is ready!")
-    except TimeoutException:
-        print("Loading took too much time!")
