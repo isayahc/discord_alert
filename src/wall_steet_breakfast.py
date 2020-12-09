@@ -1,11 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import ElementClickInterceptedException
 import os
-
-from time import sleep
 
 # finds all elements by the name
 # find_elements_by_class_name is based on regex and not equal,
@@ -19,14 +14,15 @@ def set_driver():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
     # I had to add an user agent
-    chrome_options.add_argument('--user-agent=""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36""')
+    chrome_options.add_argument('--user-agent=""Mozilla/5.0 (Windows NT 10.0; Win64; a_tag64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36""')
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
     return driver
 
 
 def get_today_link()-> str:
     # this needs to get edited
-    """Goes on seekingalpha.com 
+    """Goes on seekingalpha.com. This to my knowledge is the best i could do with refactoring based
+    on the structure of the website
 
     Returns:
         str: The link of Today's Wallstreet breakfast article If it has been published
@@ -49,13 +45,21 @@ def get_today_link()-> str:
         # other than Today and Yesterday, all other dates 
         # are formatted differently
         if 'Today' in article_text:
-            x = article.find_elements_by_tag_name('a')
+            a_tag = article.find_elements_by_tag_name('a')
 
-            article_link_element = x[0]
-            article_link_element.click()
-            # sends driver to article
-            current_link = driver.current_url
-            driver.close()
+            try:
+
+                article_link_element = a_tag[0]
+                article_link_element.click()
+                # sends driver to article
+                current_link = driver.current_url
+            except ElementClickInterceptedException:
+                article_link_element = a_tag[1]
+                article_link_element.click()
+                # sends driver to article
+                current_link = driver.current_url
+            finally:
+                driver.close()
 
             return current_link
     
@@ -63,9 +67,3 @@ def get_today_link()-> str:
     driver.close()
     # if today's article isn't yet publish return empty string
     return ""
-
-def wait_for_update():
-    #waits several times until today's article is up. 
-    #start checking at time t UTC, and check every x minutes
-    pass
-
