@@ -1,4 +1,8 @@
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 import os
 
 from time import sleep
@@ -7,6 +11,17 @@ from time import sleep
 # find_elements_by_class_name is based on regex and not equal,
 # there it's import to take out any elements that are not an exact match
 # also, the article released todday will have "Today" in the text
+
+def set_driver():
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument('--user-agent=""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36""')
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
+    return driver
+
 
 def get_today_link()-> str:
     """Goes on seekingalpha.com 
@@ -22,10 +37,15 @@ def get_today_link()-> str:
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument('--user-agent=""Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36""')
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
+    
     link = 'https://seekingalpha.com/author/wall-street-breakfast#regular_articles'
     driver.get(link)
     # driver wait
+
+    # wait = WebDriverWait(driver,
+    # wait.until(EC.visibility_of_any_elements_located)
 
     driver.implicitly_wait(60*2) # allows loading
 
@@ -60,3 +80,9 @@ def wait_for_update():
     #start checking at time t UTC, and check every x minutes
     pass
 
+def test_thing(elememt:str, delay_in_seconds:int, driver=set_driver()):
+    try:
+        myElem = WebDriverWait(driver, delay_in_seconds).until(EC.presence_of_element_located((By.ID, elememt)))
+        print("Page is ready!")
+    except TimeoutException:
+        print("Loading took too much time!")

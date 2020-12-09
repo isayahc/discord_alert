@@ -24,7 +24,7 @@ def wait_for_publishing(wait_minutes:int):
     #inital time is 6.am nyc or 11 utc
     # the time does not matter here
     # I find out which version of python heroku uses
-    logging.debug("wait_for_publishing")
+    logging.debug("start of wait_for_publishing")
     data=get_today_link()
     while not data:
         logging.debug("wait_for_publishing while loop")
